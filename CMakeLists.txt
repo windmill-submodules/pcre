@@ -71,7 +71,6 @@
 # 2021-06-14 PH applied Wolfgang Stöggl's patch for generating pcre-config and
 #            libpcre*.pc files (Bugzilla #2583)
 
-PROJECT(PCRE C CXX)
 
 # Increased minimum to 2.8.5 to support GNUInstallDirs. Set policy
 # CMP0026 to avoid warnings for the use of LOCATION in GET_TARGET_PROPERTY.
@@ -84,6 +83,8 @@ CMAKE_POLICY(SET CMP0026 OLD)
 # SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake) # for FindReadline.cmake
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+PROJECT(PCRE C CXX)
 
 # external packages
 FIND_PACKAGE( BZip2 )
@@ -501,6 +502,13 @@ ELSE(PCRE_REBUILD_CHARTABLES)
 ENDIF(PCRE_REBUILD_CHARTABLES)
 
 # Source code
+
+IF("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
+  add_compile_options(-Wno-self-assign)
+  add_compile_options(-Wno-unused-const-variable)
+  add_compile_options(-Wno-unused-but-set-variable)
+  add_compile_options(-Wno-unused-function)
+ENDIF()
 
 SET(PCRE_HEADERS ${PROJECT_BINARY_DIR}/pcre.h)
 
